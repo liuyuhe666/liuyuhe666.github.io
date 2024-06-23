@@ -1,0 +1,8 @@
+title: 'Liu Yuhe'
+description: 'Liu Yuhe's homepage'
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-hacker
+
+gems:
+  - jekyll-mentions
