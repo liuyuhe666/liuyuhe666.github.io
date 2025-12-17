@@ -1,0 +1,906 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-72x72.png">
+  <link rel="icon" href="/img/favicon-32x32.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Liu Yuhe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="在 Java 应用程序的生产环境中，出现问题（如性能下降、内存泄漏、线程死锁、服务不可用等）时，排查问题需要系统化的方法和工具支持。以下是常见的 问题排查手段，按问题类型分类： 🧭 一、基础排查思路 日志分析（首选手段） 查看应用日志（如 log4j, logback） 重点关注 ERROR、WARN、异常堆栈 使用日志聚合工具如 ELK（Elasticsearch + Logstash + K">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 应用程序生产环境下问题排查">
+<meta property="og:url" content="https://liuyuhe666.github.io/2025/08/07/Java-%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E4%B8%8B%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/index.html">
+<meta property="og:site_name" content="LiuYuhe&#39;s Blog">
+<meta property="og:description" content="在 Java 应用程序的生产环境中，出现问题（如性能下降、内存泄漏、线程死锁、服务不可用等）时，排查问题需要系统化的方法和工具支持。以下是常见的 问题排查手段，按问题类型分类： 🧭 一、基础排查思路 日志分析（首选手段） 查看应用日志（如 log4j, logback） 重点关注 ERROR、WARN、异常堆栈 使用日志聚合工具如 ELK（Elasticsearch + Logstash + K">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-08-07T07:43:27.000Z">
+<meta property="article:modified_time" content="2025-12-17T06:30:30.701Z">
+<meta property="article:author" content="Liu Yuhe">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="问题排查">
+<meta property="article:tag" content="生产环境">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Java 应用程序生产环境下问题排查 - LiuYuhe&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"liuyuhe666.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":"G-BLSKN6P29D"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-BLSKN6P29D", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-BLSKN6P29D');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="LiuYuhe's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>LiuYuhe の Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://www.travellings.cn/go.html" target="_self">
+                
+                <span>🚇开往</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Java 应用程序生产环境下问题排查"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-08-07 07:43" pubdate>
+          2025年8月7日 早上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          854 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          8 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Java 应用程序生产环境下问题排查</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <div id="readmore-container"><p>在 Java 应用程序的生产环境中，出现问题（如性能下降、内存泄漏、线程死锁、服务不可用等）时，排查问题需要系统化的方法和工具支持。以下是常见的 <strong>问题排查手段</strong>，按问题类型分类：</p>
+<h2 id="🧭-一、基础排查思路"><a href="#🧭-一、基础排查思路" class="headerlink" title="🧭 一、基础排查思路"></a>🧭 一、基础排查思路</h2><ol>
+<li><strong>日志分析</strong>（首选手段）<ul>
+<li>查看应用日志（如 <code>log4j</code>, <code>logback</code>）</li>
+<li>重点关注 <code>ERROR</code>、<code>WARN</code>、异常堆栈</li>
+<li>使用日志聚合工具如 ELK（Elasticsearch + Logstash + Kibana）、Graylog、Splunk 等</li>
+</ul>
+</li>
+<li><strong>监控系统</strong><ul>
+<li>APM 工具（如：Prometheus + Grafana、Skywalking、Pinpoint、New Relic、Datadog）</li>
+<li>监控内容包括：<ul>
+<li>JVM 状态（内存、GC、线程数）</li>
+<li>请求量、延迟、错误率</li>
+<li>数据库连接、慢 SQL</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>复现场景</strong><ul>
+<li>明确“出问题”的前因后果</li>
+<li>收集用户操作、调用链信息、系统日志、监控数据</li>
+</ul>
+</li>
+</ol>
+<h2 id="🧠-二、常见问题排查手段"><a href="#🧠-二、常见问题排查手段" class="headerlink" title="🧠 二、常见问题排查手段"></a>🧠 二、常见问题排查手段</h2><h3 id="1-CPU-占用高"><a href="#1-CPU-占用高" class="headerlink" title="1. CPU 占用高"></a>1. <strong>CPU 占用高</strong></h3><h4 id="排查工具："><a href="#排查工具：" class="headerlink" title="排查工具："></a>排查工具：</h4><ul>
+<li><code>top</code> &#x2F; <code>htop</code>（Linux）</li>
+<li><code>jstack</code>（抓取线程快照）</li>
+<li><code>jvisualvm</code> &#x2F; <code>Java Mission Control</code>（可视化分析）</li>
+<li><code>perf</code>（高级 Linux 工具）</li>
+</ul>
+<h4 id="操作步骤："><a href="#操作步骤：" class="headerlink" title="操作步骤："></a>操作步骤：</h4><div class="code-wrapper"><pre><code class="hljs bash">top -Hp &lt;pid&gt;  <span class="hljs-comment"># 查看哪个线程占用CPU高</span></code></pre></div>
+
+<p>将线程ID转为16进制，结合 <code>jstack</code> 找出对应的 Java 线程：</p>
+<div class="code-wrapper"><pre><code class="hljs bash">jstack &lt;pid&gt; &gt; dump.txt
+<span class="hljs-comment"># 查找对应的 nid=0xNNNN 线程堆栈</span></code></pre></div>
+
+
+
+<h3 id="2-内存泄漏-OOM"><a href="#2-内存泄漏-OOM" class="headerlink" title="2. 内存泄漏 &#x2F; OOM"></a>2. <strong>内存泄漏 &#x2F; OOM</strong></h3><h4 id="排查工具：-1"><a href="#排查工具：-1" class="headerlink" title="排查工具："></a>排查工具：</h4><ul>
+<li><code>jmap -dump</code> 导出堆内存快照</li>
+<li><code>jhat</code> &#x2F; <code>MAT</code>（Memory Analyzer Tool）分析 <code>.hprof</code></li>
+<li><code>VisualVM</code> 查看实时堆使用</li>
+<li>日志中查找 <code>java.lang.OutOfMemoryError</code></li>
+</ul>
+<h4 id="分析重点："><a href="#分析重点：" class="headerlink" title="分析重点："></a>分析重点：</h4><ul>
+<li>某类对象数量是否异常</li>
+<li>GC频率和Full GC情况</li>
+<li>是否存在缓存、线程池、连接池未释放</li>
+</ul>
+<h3 id="3-线程死锁"><a href="#3-线程死锁" class="headerlink" title="3. 线程死锁"></a>3. <strong>线程死锁</strong></h3><h4 id="排查工具：-2"><a href="#排查工具：-2" class="headerlink" title="排查工具："></a>排查工具：</h4><ul>
+<li><code>jstack</code> 多次抓取线程快照</li>
+<li><code>jconsole</code> &#x2F; <code>visualvm</code> 的线程视图</li>
+<li>查找 <code>Found one Java-level deadlock:</code></li>
+</ul>
+<h3 id="4-数据库慢-阻塞"><a href="#4-数据库慢-阻塞" class="headerlink" title="4. 数据库慢&#x2F;阻塞"></a>4. <strong>数据库慢&#x2F;阻塞</strong></h3><h4 id="排查工具：-3"><a href="#排查工具：-3" class="headerlink" title="排查工具："></a>排查工具：</h4><ul>
+<li>查看连接池状态（如 Druid、HikariCP）</li>
+<li>打开数据库慢查询日志</li>
+<li>使用 APM 追踪 SQL 调用时间</li>
+</ul>
+<h3 id="5-网络-服务不可用"><a href="#5-网络-服务不可用" class="headerlink" title="5. 网络&#x2F;服务不可用"></a>5. <strong>网络&#x2F;服务不可用</strong></h3><h4 id="排查手段："><a href="#排查手段：" class="headerlink" title="排查手段："></a>排查手段：</h4><ul>
+<li><code>curl</code> &#x2F; <code>telnet</code> &#x2F; <code>ping</code> &#x2F; <code>nc</code> 检查端口联通</li>
+<li>检查负载均衡器、Nginx、网关配置</li>
+<li>查看服务注册中心（如 Nacos、Eureka）是否注册成功</li>
+<li>检查防火墙和安全组配置</li>
+</ul>
+<h3 id="6-服务频繁重启-Crash"><a href="#6-服务频繁重启-Crash" class="headerlink" title="6. 服务频繁重启 &#x2F; Crash"></a>6. <strong>服务频繁重启 &#x2F; Crash</strong></h3><h4 id="排查方向："><a href="#排查方向：" class="headerlink" title="排查方向："></a>排查方向：</h4><ul>
+<li>日志是否有异常（OutOfMemoryError、StackOverflow、Signal 11）</li>
+<li>是否被 OOM Killer 杀掉（查看 <code>dmesg</code>）</li>
+<li>容器 &#x2F; Supervisor &#x2F; K8s 的 probe 配置是否异常</li>
+</ul>
+<h3 id="7-GC-频繁-性能差"><a href="#7-GC-频繁-性能差" class="headerlink" title="7. GC 频繁 &#x2F; 性能差"></a>7. <strong>GC 频繁 &#x2F; 性能差</strong></h3><h4 id="工具："><a href="#工具：" class="headerlink" title="工具："></a>工具：</h4><ul>
+<li><code>jstat -gcutil &lt;pid&gt; 1s</code> 实时查看 GC 情况</li>
+<li><code>GC 日志</code> 分析（开启 <code>-Xlog:gc*</code> 或 <code>-verbose:gc</code>）</li>
+</ul>
+<h2 id="🔧-三、常用命令速查"><a href="#🔧-三、常用命令速查" class="headerlink" title="🔧 三、常用命令速查"></a>🔧 三、常用命令速查</h2><div class="code-wrapper"><pre><code class="hljs bash"><span class="hljs-comment"># 查看进程</span>
+ps -ef | grep java
+
+<span class="hljs-comment"># 查看堆信息</span>
+jmap -heap &lt;pid&gt;
+
+<span class="hljs-comment"># 导出堆快照</span>
+jmap -dump:format=b,file=heap.hprof &lt;pid&gt;
+
+<span class="hljs-comment"># 查看线程快照</span>
+jstack &lt;pid&gt; &gt; thread.txt
+
+<span class="hljs-comment"># GC 情况</span>
+jstat -gc &lt;pid&gt; 1s
+
+<span class="hljs-comment"># 远程连接 JMX</span>
+java -Dcom.sun.management.jmxremote ...</code></pre></div>
+
+
+
+<h2 id="🧰-四、生产环境排查建议"><a href="#🧰-四、生产环境排查建议" class="headerlink" title="🧰 四、生产环境排查建议"></a>🧰 四、生产环境排查建议</h2><table>
+<thead>
+<tr>
+<th>建议项</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>关闭调试模式</strong></td>
+<td>不应开启 <code>-agentlib:jdwp</code> 等调试端口</td>
+</tr>
+<tr>
+<td><strong>开启日志分级</strong></td>
+<td>区分 debug、info、warn、error</td>
+</tr>
+<tr>
+<td><strong>设定合适的 JVM 参数</strong></td>
+<td><code>-Xms</code>, <code>-Xmx</code>, <code>-XX:+HeapDumpOnOutOfMemoryError</code></td>
+</tr>
+<tr>
+<td><strong>设置健康检查</strong></td>
+<td>容器、K8s、LB 健康探针及时剔除异常节点</td>
+</tr>
+<tr>
+<td><strong>灰度发布与回滚策略</strong></td>
+<td>确保变更可控</td>
+</tr>
+<tr>
+<td><strong>链路追踪系统</strong></td>
+<td>便于定位调用链问题（如 SkyWalking、Zipkin、Jaeger）</td>
+</tr>
+</tbody></table>
+</div>
+				<link rel="stylesheet" type="text/css" href="https://qiniu.techgrow.cn/readmore/dist/hexo.css">
+				<script src="https://qiniu.techgrow.cn/readmore/dist/readmore.js" type="text/javascript"></script>
+				<script>
+				var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+				var isEncrypt = document.getElementById('hexo-blog-encrypt');
+				var allowMobile = false;
+				if (!isEncrypt && (!isMobile || (isMobile && allowMobile))) {
+					try {
+						var plugin = new ReadmorePlugin();
+						plugin.init({
+							"type": "hexo",
+							"id": "readmore-container",
+							"name": "爱编程的阿彬",
+							"blogId": "90404-1002832395481-212",
+							"qrcode": "https://raw.githubusercontent.com/liuyuhe666/images/main/PicGo/202412061425785.jpg",
+							"keyword": "验证码",
+							"random": "1",
+							"height": "auto",
+							"expires": "365",
+							"lockToc": "yes",
+							"interval": "60",
+							"baseUrl": "",
+							"tocSelector": "#toc-body"
+						});
+					} catch(e) {
+						console.warn("readmore plugin occurred error: " + e.name + " | " + e.message);
+					}
+				}
+				</script>
+			
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
+      
+        <a href="/tags/%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" class="print-no-link">#问题排查</a>
+      
+        <a href="/tags/%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83/" class="print-no-link">#生产环境</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Java 应用程序生产环境下问题排查</div>
+      <div>https://liuyuhe666.github.io/2025/08/07/Java-应用程序生产环境下问题排查/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Liu Yuhe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年8月7日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-cc-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/08/22/%E3%80%90%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%86%E3%80%91%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90-B-%E7%AB%AF%E4%B8%8E-C-%E7%AB%AF%E7%9A%84%E5%8C%BA%E5%88%AB/" title="【产品经理】详细分析 B 端与 C 端的区别">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">【产品经理】详细分析 B 端与 C 端的区别</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/08/05/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-Rust-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" title="深入理解 Rust 生命周期">
+                        <span class="hidden-mobile">深入理解 Rust 生命周期</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+    <div id="giscus" class="giscus"></div>
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#giscus', function() {
+        var options = {"repo":"liuyuhe666/comments","repo-id":"R_kgDONaLKFg","category":"Announcements","category-id":"DIC_kwDONaLKFs4CldnC","theme-light":"light","theme-dark":"dark","mapping":"pathname","reactions-enabled":1,"emit-metadata":0,"input-position":"top","lang":"zh-CN"};
+        var attributes = {};
+        for (let option in options) {
+          if (!option.startsWith('theme-')) {
+            var key = option.startsWith('data-') ? option : 'data-' + option;
+            attributes[key] = options[option];
+          }
+        }
+        var light = 'light';
+        var dark = 'dark';
+        window.GiscusThemeLight = light;
+        window.GiscusThemeDark = dark;
+        attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
+        for (let attribute in attributes) {
+          var value = attributes[attribute];
+          if (value === undefined || value === null || value === '') {
+            delete attributes[attribute];
+          }
+        }
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('crossorigin', 'anonymous');
+        for (let attribute in attributes) {
+          s.setAttribute(attribute, attributes[attribute]);
+        }
+        var ss = document.getElementsByTagName('script');
+        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+        e.parentNode.insertBefore(s, e.nextSibling);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

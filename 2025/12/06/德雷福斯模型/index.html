@@ -1,0 +1,908 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-72x72.png">
+  <link rel="icon" href="/img/favicon-32x32.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Liu Yuhe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="德雷福斯技能获取模型（Dreyfus Model of Skill Acquisition） 德雷福斯兄弟在 1980 年代提出：人的技能水平分为 5 个阶段，从新手到专家。 每个阶段在行为、决策、理解方式上都有质的差异。  1️⃣ 新手（Novice）特征：  需要严格规则和步骤 不理解全局，只能机械执行 喜欢 checklist，不能处理例外情况 面对变化容易慌乱  软件工程例子：  初学 J">
+<meta property="og:type" content="article">
+<meta property="og:title" content="德雷福斯模型">
+<meta property="og:url" content="https://liuyuhe666.github.io/2025/12/06/%E5%BE%B7%E9%9B%B7%E7%A6%8F%E6%96%AF%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:site_name" content="LiuYuhe&#39;s Blog">
+<meta property="og:description" content="德雷福斯技能获取模型（Dreyfus Model of Skill Acquisition） 德雷福斯兄弟在 1980 年代提出：人的技能水平分为 5 个阶段，从新手到专家。 每个阶段在行为、决策、理解方式上都有质的差异。  1️⃣ 新手（Novice）特征：  需要严格规则和步骤 不理解全局，只能机械执行 喜欢 checklist，不能处理例外情况 面对变化容易慌乱  软件工程例子：  初学 J">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/liuyuhe666/images/main/PicGo/%E5%BE%B7%E9%9B%B7%E7%A6%8F%E6%96%AF%E6%8A%80%E8%83%BD%E8%8E%B7%E5%8F%96%E6%A8%A1%E5%9E%8B.png">
+<meta property="article:published_time" content="2025-12-06T15:04:13.000Z">
+<meta property="article:modified_time" content="2025-12-17T06:30:30.702Z">
+<meta property="article:author" content="Liu Yuhe">
+<meta property="article:tag" content="德雷福斯模型">
+<meta property="article:tag" content="学习笔记">
+<meta property="article:tag" content="程序人生">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/liuyuhe666/images/main/PicGo/%E5%BE%B7%E9%9B%B7%E7%A6%8F%E6%96%AF%E6%8A%80%E8%83%BD%E8%8E%B7%E5%8F%96%E6%A8%A1%E5%9E%8B.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>德雷福斯模型 - LiuYuhe&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"liuyuhe666.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":"G-BLSKN6P29D"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-BLSKN6P29D", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-BLSKN6P29D');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="LiuYuhe's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>LiuYuhe の Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://www.travellings.cn/go.html" target="_self">
+                
+                <span>🚇开往</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="德雷福斯模型"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-12-06 15:04" pubdate>
+          2025年12月6日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          987 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          9 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">德雷福斯模型</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <div id="readmore-container"><p>德雷福斯技能获取模型（Dreyfus Model of Skill Acquisition）</p>
+<p>德雷福斯兄弟在 1980 年代提出：<strong>人的技能水平分为 5 个阶段，从新手到专家</strong>。</p>
+<p>每个阶段在行为、决策、理解方式上都有质的差异。</p>
+<p><img src="https://raw.githubusercontent.com/liuyuhe666/images/main/PicGo/%E5%BE%B7%E9%9B%B7%E7%A6%8F%E6%96%AF%E6%8A%80%E8%83%BD%E8%8E%B7%E5%8F%96%E6%A8%A1%E5%9E%8B.png" srcset="/img/loading.gif" lazyload alt="德雷福斯技能获取模型"></p>
+<h2 id="1️⃣-新手（Novice）"><a href="#1️⃣-新手（Novice）" class="headerlink" title="1️⃣ 新手（Novice）"></a>1️⃣ 新手（Novice）</h2><p>特征：</p>
+<ul>
+<li>需要严格规则和步骤</li>
+<li>不理解全局，只能机械执行</li>
+<li>喜欢 checklist，不能处理例外情况</li>
+<li>面对变化容易慌乱</li>
+</ul>
+<p>软件工程例子：</p>
+<ul>
+<li>初学 Java、Go、Python，只会照着教程写</li>
+<li>不知道为何要用接口、泛型、依赖注入，只是“教程这么写”</li>
+</ul>
+<p>典型语言：</p>
+<blockquote>
+<p>“能给我一个完整的示例吗？”<br> “按照步骤做就对了。”</p>
+</blockquote>
+<h2 id="2️⃣-高级新手（Advanced-Beginner）"><a href="#2️⃣-高级新手（Advanced-Beginner）" class="headerlink" title="2️⃣ 高级新手（Advanced Beginner）"></a>2️⃣ 高级新手（Advanced Beginner）</h2><p>特征：</p>
+<ul>
+<li>能在规则基础上做一点变通</li>
+<li>但仍然没建立深层模型</li>
+<li>能靠经验处理常见场景</li>
+</ul>
+<p>软件工程例子：</p>
+<ul>
+<li>会 CRUD、会写简单 API</li>
+<li>会用 Spring Boot, Next.js，但不理解底层原理</li>
+<li>复制 StackOverflow 代码，能跑就行</li>
+</ul>
+<p>典型语言：</p>
+<blockquote>
+<p>“我试过这样写，似乎可以。”</p>
+</blockquote>
+<h2 id="3️⃣-胜任者（Competent）"><a href="#3️⃣-胜任者（Competent）" class="headerlink" title="3️⃣ 胜任者（Competent）"></a>3️⃣ 胜任者（Competent）</h2><p>特征：</p>
+<ul>
+<li>能规划和决策，开始理解 trade-offs</li>
+<li>能独立解决复杂问题，但需花时间分析</li>
+<li>开始形成 mental model（心智模型）</li>
+</ul>
+<p>软件工程例子：</p>
+<ul>
+<li>能设计一个模块、一个服务的结构</li>
+<li>会做错误处理、日志、测试</li>
+<li>知道为什么要这样设计（能“解释”）</li>
+</ul>
+<p>典型语言：</p>
+<blockquote>
+<p>“我们可以这样做，但也有另外两种方案。”</p>
+</blockquote>
+<h2 id="4️⃣-精通者（Proficient）"><a href="#4️⃣-精通者（Proficient）" class="headerlink" title="4️⃣ 精通者（Proficient）"></a>4️⃣ 精通者（Proficient）</h2><p>特征：</p>
+<ul>
+<li>能整体把握问题（holistic）</li>
+<li>直觉判断正确但仍会验证</li>
+<li>经验驱动，但能解释原因</li>
+</ul>
+<p>软件工程例子：</p>
+<ul>
+<li>能 review 别人的架构，并指出潜在问题</li>
+<li>能预测系统瓶颈、故障模式</li>
+<li>开始“看到模式”并主动优化</li>
+</ul>
+<p>典型语言：</p>
+<blockquote>
+<p>“我感觉这里未来会出现问题，应该提前重构。”</p>
+</blockquote>
+<h2 id="5️⃣-专家（Expert）"><a href="#5️⃣-专家（Expert）" class="headerlink" title="5️⃣ 专家（Expert）"></a>5️⃣ 专家（Expert）</h2><p>特征：</p>
+<ul>
+<li>完全直觉式判断，几乎一瞬间就知道问题所在</li>
+<li>解决方案精准、优雅</li>
+<li>规则对他们无意义，他们创造规则</li>
+</ul>
+<p>软件工程例子：</p>
+<ul>
+<li>能设计架构蓝图、制定工程规范</li>
+<li>性能调优如探囊取物</li>
+<li>看代码就能直觉式发现 <code>bug</code> 根因</li>
+</ul>
+<p>典型语言：</p>
+<blockquote>
+<p>“这里的延迟不是网络问题，是你用了错误的数据结构。”</p>
+</blockquote>
+<h2 id="📊-五个阶段的对比"><a href="#📊-五个阶段的对比" class="headerlink" title="📊 五个阶段的对比"></a>📊 五个阶段的对比</h2><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>决策方式</th>
+<th>核心能力</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>新手</td>
+<td>按规则</td>
+<td>需要指令</td>
+</tr>
+<tr>
+<td>高级新手</td>
+<td>模式识别（弱）</td>
+<td>能处理常规任务</td>
+</tr>
+<tr>
+<td>胜任者</td>
+<td>思考 → 分析 → 行动</td>
+<td>能规划</td>
+</tr>
+<tr>
+<td>精通者</td>
+<td>直觉 → 分析</td>
+<td>看到模式</td>
+</tr>
+<tr>
+<td>专家</td>
+<td>直觉</td>
+<td>创造新模式</td>
+</tr>
+</tbody></table>
+<h2 id="💡-德雷福斯模型在工程成长中的启示"><a href="#💡-德雷福斯模型在工程成长中的启示" class="headerlink" title="💡 德雷福斯模型在工程成长中的启示"></a>💡 德雷福斯模型在工程成长中的启示</h2><ul>
+<li>新手需要 <strong>清晰规则</strong>（例如代码规范、PR 模板）</li>
+<li>胜任者开始需要 <strong>项目经验</strong> 而不是刷题</li>
+<li>精通者需要 <strong>复盘与反思</strong></li>
+<li>专家依赖 <strong>积累 + 宽度 + 深度 + 复盘</strong></li>
+</ul>
+<p>如果你是一个新手，刚刚工作不久，那么不要被所谓的工作经验和所谓的资深工程师的说教局限住，你要去思考规则背后的原理，主动发现新问题然后去解决问题，越过高级新手阶段，直接向着胜任者、精通者和专家前进吧。</p>
+<p>如果你是一个有多年经验的资深工程师，那么忘了你的工作年限吧，去问自己，我拥有和工作年限相匹配的工作技能吗？我在德雷福斯模型的哪个阶段？我该如何超越当前阶段，成为一个专家？</p>
+</div>
+				<link rel="stylesheet" type="text/css" href="https://qiniu.techgrow.cn/readmore/dist/hexo.css">
+				<script src="https://qiniu.techgrow.cn/readmore/dist/readmore.js" type="text/javascript"></script>
+				<script>
+				var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+				var isEncrypt = document.getElementById('hexo-blog-encrypt');
+				var allowMobile = false;
+				if (!isEncrypt && (!isMobile || (isMobile && allowMobile))) {
+					try {
+						var plugin = new ReadmorePlugin();
+						plugin.init({
+							"type": "hexo",
+							"id": "readmore-container",
+							"name": "爱编程的阿彬",
+							"blogId": "90404-1002832395481-212",
+							"qrcode": "https://raw.githubusercontent.com/liuyuhe666/images/main/PicGo/202412061425785.jpg",
+							"keyword": "验证码",
+							"random": "1",
+							"height": "auto",
+							"expires": "365",
+							"lockToc": "yes",
+							"interval": "60",
+							"baseUrl": "",
+							"tocSelector": "#toc-body"
+						});
+					} catch(e) {
+						console.warn("readmore plugin occurred error: " + e.name + " | " + e.message);
+					}
+				}
+				</script>
+			
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%BE%B7%E9%9B%B7%E7%A6%8F%E6%96%AF%E6%A8%A1%E5%9E%8B/" class="print-no-link">#德雷福斯模型</a>
+      
+        <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="print-no-link">#学习笔记</a>
+      
+        <a href="/tags/%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F/" class="print-no-link">#程序人生</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>德雷福斯模型</div>
+      <div>https://liuyuhe666.github.io/2025/12/06/德雷福斯模型/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Liu Yuhe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年12月6日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-cc-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/12/17/%E8%AF%A6%E8%A7%A3-ES-%E7%9A%84%E5%80%92%E6%8E%92%E7%B4%A2%E5%BC%95%E6%9C%BA%E5%88%B6/" title="详解 ES 的倒排索引机制">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">详解 ES 的倒排索引机制</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/11/20/JUL-%E4%BB%8E%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE%E5%88%B0%E9%AB%98%E7%BA%A7%E7%8E%A9%E6%B3%95/" title="JUL 从基础配置到高级玩法">
+                        <span class="hidden-mobile">JUL 从基础配置到高级玩法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+    <div id="giscus" class="giscus"></div>
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#giscus', function() {
+        var options = {"repo":"liuyuhe666/comments","repo-id":"R_kgDONaLKFg","category":"Announcements","category-id":"DIC_kwDONaLKFs4CldnC","theme-light":"light","theme-dark":"dark","mapping":"pathname","reactions-enabled":1,"emit-metadata":0,"input-position":"top","lang":"zh-CN"};
+        var attributes = {};
+        for (let option in options) {
+          if (!option.startsWith('theme-')) {
+            var key = option.startsWith('data-') ? option : 'data-' + option;
+            attributes[key] = options[option];
+          }
+        }
+        var light = 'light';
+        var dark = 'dark';
+        window.GiscusThemeLight = light;
+        window.GiscusThemeDark = dark;
+        attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
+        for (let attribute in attributes) {
+          var value = attributes[attribute];
+          if (value === undefined || value === null || value === '') {
+            delete attributes[attribute];
+          }
+        }
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('crossorigin', 'anonymous');
+        for (let attribute in attributes) {
+          s.setAttribute(attribute, attributes[attribute]);
+        }
+        var ss = document.getElementsByTagName('script');
+        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+        e.parentNode.insertBefore(s, e.nextSibling);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

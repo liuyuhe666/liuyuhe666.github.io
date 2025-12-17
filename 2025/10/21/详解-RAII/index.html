@@ -1,0 +1,922 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-72x72.png">
+  <link rel="icon" href="/img/favicon-32x32.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Liu Yuhe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="什么是 RAII（资源获取即初始化）RAII（Resource Acquisition Is Initialization）是一种管理资源的编程惯用法：把“资源的获取”绑定到对象的构造过程，把“资源的释放”绑定到对象的析构过程。当对象创建时获得资源；当对象生命周期结束（离开作用域）时自动释放资源。这样利用语言的对象生命周期（特别是 C++ 的确定性析构）来确保资源不会泄漏，并能在异常发生时自动清理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="详解 RAII">
+<meta property="og:url" content="https://liuyuhe666.github.io/2025/10/21/%E8%AF%A6%E8%A7%A3-RAII/index.html">
+<meta property="og:site_name" content="LiuYuhe&#39;s Blog">
+<meta property="og:description" content="什么是 RAII（资源获取即初始化）RAII（Resource Acquisition Is Initialization）是一种管理资源的编程惯用法：把“资源的获取”绑定到对象的构造过程，把“资源的释放”绑定到对象的析构过程。当对象创建时获得资源；当对象生命周期结束（离开作用域）时自动释放资源。这样利用语言的对象生命周期（特别是 C++ 的确定性析构）来确保资源不会泄漏，并能在异常发生时自动清理">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-10-21T16:26:09.000Z">
+<meta property="article:modified_time" content="2025-12-17T06:30:30.703Z">
+<meta property="article:author" content="Liu Yuhe">
+<meta property="article:tag" content="RAII">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="内存管理">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>详解 RAII - LiuYuhe&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"liuyuhe666.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":"G-BLSKN6P29D"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-BLSKN6P29D", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-BLSKN6P29D');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="LiuYuhe's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>LiuYuhe の Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://www.travellings.cn/go.html" target="_self">
+                
+                <span>🚇开往</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="详解 RAII"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-10-21 16:26" pubdate>
+          2025年10月21日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          20 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">详解 RAII</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <div id="readmore-container"><h2 id="什么是-RAII（资源获取即初始化）"><a href="#什么是-RAII（资源获取即初始化）" class="headerlink" title="什么是 RAII（资源获取即初始化）"></a>什么是 RAII（资源获取即初始化）</h2><p>RAII（Resource Acquisition Is Initialization）是一种管理资源的编程惯用法：把“资源的获取”绑定到对象的构造过程，把“资源的释放”绑定到对象的析构过程。<strong>当对象创建时获得资源；当对象生命周期结束（离开作用域）时自动释放资源</strong>。这样利用语言的对象生命周期（特别是 C++ 的确定性析构）来确保资源不会泄漏，并能在异常发生时自动清理。</p>
+<p>核心要点：</p>
+<ul>
+<li>资源（file descriptor、内存、锁、socket、HANDLE、线程等）被封装为类的成员；</li>
+<li>构造函数负责获取&#x2F;初始化资源；</li>
+<li>析构函数负责释放资源（清理、close、unlock、free、join 等）；</li>
+<li>利用作用域（stack-based）和确定性析构来保证异常安全与自动释放。</li>
+</ul>
+<h2 id="为什么-RAII-很重要（优点）"><a href="#为什么-RAII-很重要（优点）" class="headerlink" title="为什么 RAII 很重要（优点）"></a>为什么 RAII 很重要（优点）</h2><ol>
+<li><strong>异常安全</strong>：异常抛出时，自动调用局部对象的析构，资源能被释放，避免泄漏。</li>
+<li><strong>简化代码</strong>：将资源获取&#x2F;释放逻辑集中到类中，使用者只需按局部变量的方式使用。</li>
+<li><strong>可组合</strong>：RAII 对象能作为其他对象的成员，从而组合更复杂的资源管理。</li>
+<li><strong>避免忘记释放</strong>：减少手动调用 <code>close</code>&#x2F;<code>free</code> 的出错机会。</li>
+<li><strong>清晰语义</strong>：资源拥有权（ownership）明确，便于 reasoning 与重构。</li>
+</ol>
+<h2 id="最典型的例子（C-）"><a href="#最典型的例子（C-）" class="headerlink" title="最典型的例子（C++）"></a>最典型的例子（C++）</h2><p>最简单的示例：管理文件指针 <code>FILE*</code>。</p>
+<div class="code-wrapper"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;cstdio&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdexcept&gt;</span></span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">FileRAII</span> &#123;
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-built_in">FileRAII</span>(<span class="hljs-type">const</span> <span class="hljs-type">char</span>* path, <span class="hljs-type">const</span> <span class="hljs-type">char</span>* mode) &#123;
+        f_ = std::<span class="hljs-built_in">fopen</span>(path, mode);
+        <span class="hljs-keyword">if</span> (!f_) <span class="hljs-keyword">throw</span> std::<span class="hljs-built_in">runtime_error</span>(<span class="hljs-string">&quot;fopen failed&quot;</span>);
+    &#125;
+    ~<span class="hljs-built_in">FileRAII</span>() &#123;
+        <span class="hljs-keyword">if</span> (f_) std::<span class="hljs-built_in">fclose</span>(f_);
+    &#125;
+    <span class="hljs-function">FILE* <span class="hljs-title">get</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>&#123; <span class="hljs-keyword">return</span> f_; &#125;
+    <span class="hljs-comment">// 禁用拷贝以避免双重关闭</span>
+    <span class="hljs-built_in">FileRAII</span>(<span class="hljs-type">const</span> FileRAII&amp;) = <span class="hljs-keyword">delete</span>;
+    FileRAII&amp; <span class="hljs-keyword">operator</span>=(<span class="hljs-type">const</span> FileRAII&amp;) = <span class="hljs-keyword">delete</span>;
+    <span class="hljs-comment">// 支持移动</span>
+    <span class="hljs-built_in">FileRAII</span>(FileRAII&amp;&amp; other) <span class="hljs-keyword">noexcept</span> : <span class="hljs-built_in">f_</span>(other.f_) &#123; other.f_ = <span class="hljs-literal">nullptr</span>; &#125;
+    FileRAII&amp; <span class="hljs-keyword">operator</span>=(FileRAII&amp;&amp; other) <span class="hljs-keyword">noexcept</span> &#123;
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span> != &amp;other) &#123;
+            <span class="hljs-keyword">if</span> (f_) std::<span class="hljs-built_in">fclose</span>(f_);
+            f_ = other.f_;
+            other.f_ = <span class="hljs-literal">nullptr</span>;
+        &#125;
+        <span class="hljs-keyword">return</span> *<span class="hljs-keyword">this</span>;
+    &#125;
+
+<span class="hljs-keyword">private</span>:
+    FILE* f_ = <span class="hljs-literal">nullptr</span>;
+&#125;;</code></pre></div>
+
+<p>使用方式：</p>
+<div class="code-wrapper"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">foo</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-function">FileRAII <span class="hljs-title">file</span><span class="hljs-params">(<span class="hljs-string">&quot;data.txt&quot;</span>, <span class="hljs-string">&quot;r&quot;</span>)</span></span>;
+    <span class="hljs-comment">// 当 foo 返回或抛出异常时，file 的析构会自动 fclose</span>
+&#125;</code></pre></div>
+
+<h2 id="常见-C-标准库-RAII-类型"><a href="#常见-C-标准库-RAII-类型" class="headerlink" title="常见 C++ 标准库 RAII 类型"></a>常见 C++ 标准库 RAII 类型</h2><ul>
+<li><code>std::unique_ptr&lt;T&gt;</code>：拥有型智能指针，析构时 delete。</li>
+<li><code>std::shared_ptr&lt;T&gt;</code>：共享拥有，最后一个引用析构时释放资源（注意循环引用问题）。</li>
+<li><code>std::lock_guard&lt;Mutex&gt;</code> &#x2F; <code>std::unique_lock&lt;Mutex&gt;</code>：互斥锁的 RAII（自动 unlock）。</li>
+<li><code>std::fstream</code> &#x2F; <code>std::ifstream</code> &#x2F; <code>std::ofstream</code>：文件流，析构时关闭文件。</li>
+<li><code>std::thread</code>（需要注意析构前必须 join 或 detach，否则会调用 std::terminate）。</li>
+</ul>
+<h2 id="异常安全与-RAII-的结合（基本概念）"><a href="#异常安全与-RAII-的结合（基本概念）" class="headerlink" title="异常安全与 RAII 的结合（基本概念）"></a>异常安全与 RAII 的结合（基本概念）</h2><p>RAII 是实现异常安全的重要工具。结合异常安全等级（常用概念）：</p>
+<ul>
+<li><strong>无失败保证 (No-throw guarantee)</strong>：操作不会抛异常（构造&#x2F;析构最好不要抛出）。</li>
+<li><strong>强异常安全（Strong）</strong>：操作要么成功要么回滚到原状态（通常通过拷贝&#x2F;交换实现）。</li>
+<li><strong>基本异常安全（Basic）</strong>：保证不会泄露资源，程序仍处于有效状态，但内部可能部分修改。</li>
+</ul>
+<p>实践中：</p>
+<ul>
+<li><strong>析构函数绝不抛异常</strong>（否则在异常传播时会调用 <code>std::terminate</code>）。析构中发生错误应该吞掉或记录日志，不抛出。</li>
+<li>构造函数可以抛（表示获取资源失败），这是合理的——调用者知道构造失败，资源没有被持有。</li>
+</ul>
+<h2 id="移动语义与-RAII"><a href="#移动语义与-RAII" class="headerlink" title="移动语义与 RAII"></a>移动语义与 RAII</h2><p>在现代 C++ 中，RAII 类型通常是<strong>可移动但不可拷贝</strong>（或禁止不安全的拷贝），以表达资源唯一所有权。例如 <code>std::unique_ptr</code>。实现移动语义时要确保：</p>
+<ul>
+<li>移动后源对象处于可析构的“空”状态（不再拥有资源）。</li>
+<li>目标对象接管资源。<br> 这允许将 RAII 对象放进容器或做返回值优化。</li>
+</ul>
+<h2 id="常见模式与技巧"><a href="#常见模式与技巧" class="headerlink" title="常见模式与技巧"></a>常见模式与技巧</h2><h3 id="1-自定义删除器（custom-deleter）"><a href="#1-自定义删除器（custom-deleter）" class="headerlink" title="1. 自定义删除器（custom deleter）"></a>1. 自定义删除器（custom deleter）</h3><p><code>std::unique_ptr</code> 支持自定义删除器，便于管理非 new&#x2F;delete 的资源：</p>
+<div class="code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">FILECloser</span> &#123; <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">operator</span><span class="hljs-params">()</span><span class="hljs-params">(FILE* f)</span> <span class="hljs-type">const</span> </span>&#123; <span class="hljs-keyword">if</span> (f) std::<span class="hljs-built_in">fclose</span>(f); &#125; &#125;;
+<span class="hljs-function">std::unique_ptr&lt;FILE, FILECloser&gt; <span class="hljs-title">filePtr</span><span class="hljs-params">(std::fopen(<span class="hljs-string">&quot;a.txt&quot;</span>,<span class="hljs-string">&quot;r&quot;</span>))</span></span>;</code></pre></div>
+
+<h3 id="2-lock-guard-unique-lock-管理锁"><a href="#2-lock-guard-unique-lock-管理锁" class="headerlink" title="2. lock_guard &#x2F; unique_lock 管理锁"></a>2. lock_guard &#x2F; unique_lock 管理锁</h3><p>避免手动 <code>mutex.lock()</code> &#x2F; <code>mutex.unlock()</code>：</p>
+<div class="code-wrapper"><pre><code class="hljs cpp">std::mutex m;
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">f</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-function">std::lock_guard&lt;std::mutex&gt; <span class="hljs-title">guard</span><span class="hljs-params">(m)</span></span>; <span class="hljs-comment">// 析构时 unlock</span>
+    <span class="hljs-comment">// 安全</span>
+&#125;</code></pre></div>
+
+<h3 id="3-Scope-exit（在离开作用域执行任意清理）"><a href="#3-Scope-exit（在离开作用域执行任意清理）" class="headerlink" title="3. Scope exit（在离开作用域执行任意清理）"></a>3. Scope exit（在离开作用域执行任意清理）</h3><p>C++17 以前常用自定义 scope guard；C++23 有 <code>std::scope_exit</code>：</p>
+<div class="code-wrapper"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;scope&gt;</span></span>
+<span class="hljs-keyword">auto</span> guard = std::<span class="hljs-built_in">make_scope_exit</span>([]()&#123; <span class="hljs-comment">/* cleanup */</span> &#125;);</code></pre></div>
+
+<h3 id="4-通过成员变量实现组合资源"><a href="#4-通过成员变量实现组合资源" class="headerlink" title="4. 通过成员变量实现组合资源"></a>4. 通过成员变量实现组合资源</h3><p>把多个资源作为类成员，析构时会按成员定义的逆序调用析构，自动释放。</p>
+<h3 id="5-非托管资源（系统句柄）也用-RAII"><a href="#5-非托管资源（系统句柄）也用-RAII" class="headerlink" title="5. 非托管资源（系统句柄）也用 RAII"></a>5. 非托管资源（系统句柄）也用 RAII</h3><p>Windows 的 <code>HANDLE</code>、POSIX 的 fd、sockets、OpenGL 资源等，都应封装成 RAII 类。</p>
+<h2 id="常见陷阱与注意事项"><a href="#常见陷阱与注意事项" class="headerlink" title="常见陷阱与注意事项"></a>常见陷阱与注意事项</h2><ol>
+<li><strong>析构时抛异常</strong>：切忌让析构抛异常。若需要报告错误，记录日志或调用 <code>std::terminate</code> 前可选方案，但通常日志更妥当。</li>
+<li><strong>静态对象的销毁顺序问题（静态析构次序）</strong>：跨翻译单元的静态对象销毁顺序不确定，可能导致访问已销毁对象。解决办法包括：把对象放在函数内的静态变量（Meyers 单例）、或使用 <code>std::shared_ptr</code> 延长寿命。</li>
+<li><strong>std::shared_ptr 循环引用</strong>：导致资源无法释放。用 <code>std::weak_ptr</code> 打破循环。</li>
+<li><strong>std::thread 析构问题</strong>：若线程对象在析构时仍 joinable，会 <code>std::terminate</code>。解决：在析构中 join 或 detach，或在构造中将线程交给 RAII 包装（确保析构会 join）。</li>
+<li><strong>双重释放（double free）</strong>：拷贝会导致两个对象释放同一资源，应删除拷贝或正确实现引用计数。</li>
+<li><strong>资源所有权不清</strong>：使用命名清楚的类型（<code>unique_ptr</code> vs <code>shared_ptr</code>）传达所有权语义。</li>
+<li><strong>性能考虑</strong>：小粒度的 RAII 对象创建&#x2F;销毁很便捷但过度使用会有开销，要根据场景权衡（但通常可忽略）。</li>
+</ol>
+<h2 id="与其他语言对比（帮助掌握概念）"><a href="#与其他语言对比（帮助掌握概念）" class="headerlink" title="与其他语言对比（帮助掌握概念）"></a>与其他语言对比（帮助掌握概念）</h2><ul>
+<li><strong>Rust</strong>：所有权模型+借用检查，是 RAII 的更严格形式（资源在所有者离开作用域时自动释放，编译期保证安全）。</li>
+<li><strong>Java &#x2F; C#</strong>：垃圾回收为主，不保证确定性析构。Java 采用 <code>try-with-resources</code>（<code>AutoCloseable</code>）来实现类似 RAII 的确定性释放。C# 有 <code>using</code> 语句。</li>
+<li><strong>Go</strong>：没有析构机制，常用 <code>defer</code> 在函数返回时释放资源（在语义上和 RAII 有类似效果，但不是基于对象生命周期）。</li>
+<li><strong>Python</strong>：<code>with</code> 语句（上下文管理器）是 RAII 的等价，<code>__enter__</code>&#x2F;<code>__exit__</code> 实现资源获取&#x2F;释放。</li>
+</ul>
+<h2 id="进阶示例：互斥锁与条件资源"><a href="#进阶示例：互斥锁与条件资源" class="headerlink" title="进阶示例：互斥锁与条件资源"></a>进阶示例：互斥锁与条件资源</h2><div class="code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">LockRAII</span> &#123;
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">explicit</span> <span class="hljs-title">LockRAII</span><span class="hljs-params">(std::mutex&amp; m)</span> : mtx_(m) &#123;</span> mtx_.<span class="hljs-built_in">lock</span>(); &#125;
+    ~<span class="hljs-built_in">LockRAII</span>() &#123; mtx_.<span class="hljs-built_in">unlock</span>(); &#125;
+    <span class="hljs-built_in">LockRAII</span>(<span class="hljs-type">const</span> LockRAII&amp;) = <span class="hljs-keyword">delete</span>;
+    LockRAII&amp; <span class="hljs-keyword">operator</span>=(<span class="hljs-type">const</span> LockRAII&amp;) = <span class="hljs-keyword">delete</span>;
+<span class="hljs-keyword">private</span>:
+    std::mutex&amp; mtx_;
+&#125;;</code></pre></div>
+
+<p>更常用的就是 <code>std::lock_guard</code>，可避免死锁&#x2F;异常时忘记 unlock。</p>
+<h2 id="实战建议（工程级）"><a href="#实战建议（工程级）" class="headerlink" title="实战建议（工程级）"></a>实战建议（工程级）</h2><ol>
+<li><strong>优先使用标准库的 RAII 类型</strong>（<code>unique_ptr</code>, <code>shared_ptr</code>, <code>lock_guard</code>, <code>fstream</code> 等），若需特殊行为再写自定义。</li>
+<li><strong>资源拥有权尽量单一明确</strong>：prefer unique ownership，只有确实需要共享时才用共享引用。</li>
+<li><strong>析构无异常</strong>：析构函数内部保护所有可能抛出的操作（<code>try</code>&#x2F;<code>catch</code>）并处理错误。</li>
+<li><strong>避免裸指针作为 owning semantics</strong>：裸指针可用于 non-owning 观察者，Ownership 用智能指针或明确的 RAII 类。</li>
+<li><strong>在多线程场景</strong>，确保析构不会导致未 join 的线程或死锁。考虑加入超时或显式的关闭协议。</li>
+<li><strong>对外 API</strong>：如果库函数返回资源，优先返回 RAII 类型，不要暴露裸资源句柄。</li>
+</ol>
+<h2 id="什么时候-RAII-不适用？"><a href="#什么时候-RAII-不适用？" class="headerlink" title="什么时候 RAII 不适用？"></a>什么时候 RAII 不适用？</h2><ul>
+<li>某些语言没有确定性析构（如纯 GC 语言）时，RAII 不能直接工作，但语言通常提供等价机制（如 <code>try-with-resources</code> &#x2F; <code>using</code> &#x2F; <code>with</code> &#x2F; <code>defer</code>）。</li>
+<li>需要延迟释放（非作用域边界）时，可能需要显式释放或使用更灵活的生命周期管理器，但仍可用 RAII 封装释放逻辑并提供 <code>release()</code> 方法。</li>
+</ul>
+<h2 id="常见问题（FAQ）"><a href="#常见问题（FAQ）" class="headerlink" title="常见问题（FAQ）"></a>常见问题（FAQ）</h2><ul>
+<li><strong>RAII 会影响性能吗？</strong><br> 通常开销很小。构造&#x2F;析构的代价与资源操作有关（例如 close、fclose）。在性能关键路径上可以评估，但安全性通常优先。</li>
+<li><strong>析构抛异常怎么办？</strong><br> 不要抛。捕获并记录错误。若必须暴露错误，提供显式 <code>close()</code> 方法让调用者检查错误，并在析构时做最安全的清理（并吞异常或记录）。</li>
+<li><strong>如何设计可重入&#x2F;可复制的 RAII？</strong><br> 如果资源本身是可共享的，设计共享语义（引用计数）或提供复制行为；否则禁用拷贝并提供移动。</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>RAII &#x3D; 构造时获取，析构时释放。把资源生命周期与对象生命周期绑定。</li>
+<li>它是 C++ 等语言中实现异常安全与资源自动管理的基石。</li>
+<li>使用 <code>unique_ptr</code>、<code>lock_guard</code>、自定义 RAII 类型可以显著减少资源泄漏与复杂清理逻辑。</li>
+<li>注意析构中不要抛异常，注意静态对象析构顺序、shared_ptr 循环引用、线程 join 等实际问题。</li>
+</ul>
+</div>
+				<link rel="stylesheet" type="text/css" href="https://qiniu.techgrow.cn/readmore/dist/hexo.css">
+				<script src="https://qiniu.techgrow.cn/readmore/dist/readmore.js" type="text/javascript"></script>
+				<script>
+				var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+				var isEncrypt = document.getElementById('hexo-blog-encrypt');
+				var allowMobile = false;
+				if (!isEncrypt && (!isMobile || (isMobile && allowMobile))) {
+					try {
+						var plugin = new ReadmorePlugin();
+						plugin.init({
+							"type": "hexo",
+							"id": "readmore-container",
+							"name": "爱编程的阿彬",
+							"blogId": "90404-1002832395481-212",
+							"qrcode": "https://raw.githubusercontent.com/liuyuhe666/images/main/PicGo/202412061425785.jpg",
+							"keyword": "验证码",
+							"random": "1",
+							"height": "auto",
+							"expires": "365",
+							"lockToc": "yes",
+							"interval": "60",
+							"baseUrl": "",
+							"tocSelector": "#toc-body"
+						});
+					} catch(e) {
+						console.warn("readmore plugin occurred error: " + e.name + " | " + e.message);
+					}
+				}
+				</script>
+			
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/RAII/" class="print-no-link">#RAII</a>
+      
+        <a href="/tags/C/" class="print-no-link">#C++</a>
+      
+        <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" class="print-no-link">#内存管理</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>详解 RAII</div>
+      <div>https://liuyuhe666.github.io/2025/10/21/详解-RAII/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Liu Yuhe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年10月21日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-cc-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/11/03/%E5%88%B7%E6%96%B0-GitHub-%E5%9B%BE%E7%89%87%E7%BC%93%E5%AD%98/" title="刷新 GitHub 图片缓存">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">刷新 GitHub 图片缓存</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/08/24/%E3%80%90%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E3%80%91%E5%B8%B8%E7%94%A8%E7%9A%84%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/" title="【推荐系统】常用的推荐算法">
+                        <span class="hidden-mobile">【推荐系统】常用的推荐算法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+    <div id="giscus" class="giscus"></div>
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#giscus', function() {
+        var options = {"repo":"liuyuhe666/comments","repo-id":"R_kgDONaLKFg","category":"Announcements","category-id":"DIC_kwDONaLKFs4CldnC","theme-light":"light","theme-dark":"dark","mapping":"pathname","reactions-enabled":1,"emit-metadata":0,"input-position":"top","lang":"zh-CN"};
+        var attributes = {};
+        for (let option in options) {
+          if (!option.startsWith('theme-')) {
+            var key = option.startsWith('data-') ? option : 'data-' + option;
+            attributes[key] = options[option];
+          }
+        }
+        var light = 'light';
+        var dark = 'dark';
+        window.GiscusThemeLight = light;
+        window.GiscusThemeDark = dark;
+        attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
+        for (let attribute in attributes) {
+          var value = attributes[attribute];
+          if (value === undefined || value === null || value === '') {
+            delete attributes[attribute];
+          }
+        }
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('crossorigin', 'anonymous');
+        for (let attribute in attributes) {
+          s.setAttribute(attribute, attributes[attribute]);
+        }
+        var ss = document.getElementsByTagName('script');
+        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+        e.parentNode.insertBefore(s, e.nextSibling);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

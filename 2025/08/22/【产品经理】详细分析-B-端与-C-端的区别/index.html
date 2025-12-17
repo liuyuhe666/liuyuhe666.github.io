@@ -1,0 +1,976 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-72x72.png">
+  <link rel="icon" href="/img/favicon-32x32.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Liu Yuhe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="下面从产品经理视角，把 B 端（面向企业&#x2F;组织）与 C 端（面向大众消费者）的差异讲清楚，并给到可落地的方法与指标框架。 核心差异一览（抓住“大三角”） 用户与动机 B 端：多角色、层级化（采购&#x2F;老板&#x2F;使用者&#x2F;IT&#x2F;财务），动机是“效率、合规、可控、ROI”。 C 端：单个体或小群体，动机是“好用&#x2F;好玩&#x2F;便宜&#x2F;体面&amp;#">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【产品经理】详细分析 B 端与 C 端的区别">
+<meta property="og:url" content="https://liuyuhe666.github.io/2025/08/22/%E3%80%90%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%86%E3%80%91%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90-B-%E7%AB%AF%E4%B8%8E-C-%E7%AB%AF%E7%9A%84%E5%8C%BA%E5%88%AB/index.html">
+<meta property="og:site_name" content="LiuYuhe&#39;s Blog">
+<meta property="og:description" content="下面从产品经理视角，把 B 端（面向企业&#x2F;组织）与 C 端（面向大众消费者）的差异讲清楚，并给到可落地的方法与指标框架。 核心差异一览（抓住“大三角”） 用户与动机 B 端：多角色、层级化（采购&#x2F;老板&#x2F;使用者&#x2F;IT&#x2F;财务），动机是“效率、合规、可控、ROI”。 C 端：单个体或小群体，动机是“好用&#x2F;好玩&#x2F;便宜&#x2F;体面&amp;#">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-08-22T11:48:56.000Z">
+<meta property="article:modified_time" content="2025-12-17T06:30:30.702Z">
+<meta property="article:author" content="Liu Yuhe">
+<meta property="article:tag" content="产品经理">
+<meta property="article:tag" content="B 端">
+<meta property="article:tag" content="C 端">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>【产品经理】详细分析 B 端与 C 端的区别 - LiuYuhe&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"liuyuhe666.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":"G-BLSKN6P29D"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-BLSKN6P29D", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-BLSKN6P29D');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="LiuYuhe's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>LiuYuhe の Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://www.travellings.cn/go.html" target="_self">
+                
+                <span>🚇开往</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="【产品经理】详细分析 B 端与 C 端的区别"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-08-22 11:48" pubdate>
+          2025年8月22日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          19 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">【产品经理】详细分析 B 端与 C 端的区别</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <div id="readmore-container"><p>下面从产品经理视角，把 B 端（面向企业&#x2F;组织）与 C 端（面向大众消费者）的差异讲清楚，并给到可落地的方法与指标框架。</p>
+<h1 id="核心差异一览（抓住“大三角”）"><a href="#核心差异一览（抓住“大三角”）" class="headerlink" title="核心差异一览（抓住“大三角”）"></a>核心差异一览（抓住“大三角”）</h1><ul>
+<li><strong>用户与动机</strong><ul>
+<li>B 端：多角色、层级化（采购&#x2F;老板&#x2F;使用者&#x2F;IT&#x2F;财务），动机是“效率、合规、可控、ROI”。</li>
+<li>C 端：单个体或小群体，动机是“好用&#x2F;好玩&#x2F;便宜&#x2F;体面&#x2F;省心”，情绪和口碑影响大。</li>
+</ul>
+</li>
+<li><strong>决策与获客</strong><ul>
+<li>B 端：销售&#x2F;招投标&#x2F;试点驱动，决策链长（RFP→PoC→试点→合同），强背书与案例。</li>
+<li>C 端：增长驱动（ASO&#x2F;SEO&#x2F;投放&#x2F;社媒&#x2F;裂变），决策链短，A&#x2F;B 快速验证。</li>
+</ul>
+</li>
+<li><strong>交付与成功</strong><ul>
+<li>B 端：实施+培训+集成，变更要“可控可追溯”；续约与扩张（NDR）是生命线。</li>
+<li>C 端：上手快、频迭代、体验拉满；看留存&#x2F;时长&#x2F;转化，营收多为订阅&#x2F;内购&#x2F;广告。</li>
+</ul>
+</li>
+</ul>
+<h1 id="产品方法与流程差异"><a href="#产品方法与流程差异" class="headerlink" title="产品方法与流程差异"></a>产品方法与流程差异</h1><h2 id="1）需求与调研"><a href="#1）需求与调研" class="headerlink" title="1）需求与调研"></a>1）需求与调研</h2><ul>
+<li><strong>B 端</strong><ul>
+<li>方法：现场走访、影子研究（Shadowing）、流程梳理（BPMN&#x2F;SIPOC）、价值流分析（VSM）。</li>
+<li>关注：法规&#x2F;内控要求、角色职责、跨系统流程与数据口径、现有 IT 资产与限制。</li>
+<li>输出版：现状流程图→痛点矩阵（影响×频次）→目标流程与可量化收益（时间、错单率、人效）。</li>
+</ul>
+</li>
+<li><strong>C 端</strong><ul>
+<li>方法：用户画像+场景链路、可用性测试、增长实验（A&#x2F;B、多臂老虎机）。</li>
+<li>关注：动机与情绪、首日&#x2F;次日留存的“aha moment”、转化漏斗、口碑传播点。</li>
+</ul>
+</li>
+</ul>
+<h2 id="2）信息架构与交互"><a href="#2）信息架构与交互" class="headerlink" title="2）信息架构与交互"></a>2）信息架构与交互</h2><ul>
+<li><strong>B 端</strong><ul>
+<li>导航以业务流程与角色为纲；支持<strong>批量操作、可编辑表格、快捷键</strong>；</li>
+<li><strong>权限模型</strong>（组织&#x2F;部门&#x2F;角色&#x2F;数据域）、<strong>审计日志</strong>、<strong>草稿&#x2F;审批&#x2F;回滚</strong>；</li>
+<li>配置化（字段、流程、表单、报表）与<strong>多租户隔离</strong>、<strong>单点登录（SSO）</strong>。</li>
+</ul>
+</li>
+<li><strong>C 端</strong><ul>
+<li>新手引导、空状态设计、渐进暴露；</li>
+<li>视觉一致性、可发现性、情绪化体验（动效&#x2F;反馈），<strong>上手 30 秒内达成核心价值</strong>。</li>
+</ul>
+</li>
+</ul>
+<h2 id="3）集成与技术约束"><a href="#3）集成与技术约束" class="headerlink" title="3）集成与技术约束"></a>3）集成与技术约束</h2><ul>
+<li><strong>B 端</strong>：对接 ERP&#x2F;CRM&#x2F;HR&#x2F;财务、消息总线、主数据（MDM）、数据合规（GDPR&#x2F;本地法）、SLA&#x2F;容灾&#x2F;可观测；版本兼容与迁移工具。</li>
+<li><strong>C 端</strong>：端侧性能与兼容、风控反作弊、内容安全、账号生态、支付渠道与退款体验。</li>
+</ul>
+<h2 id="4）商业与定价"><a href="#4）商业与定价" class="headerlink" title="4）商业与定价"></a>4）商业与定价</h2><ul>
+<li><strong>B 端</strong>：按席位&#x2F;按用量&#x2F;分级套餐&#x2F;私有化；常见<strong>账期回款</strong>、里程碑交付；续费与扩容靠“可见 ROI”。</li>
+<li><strong>C 端</strong>：订阅&#x2F;内购&#x2F;广告&#x2F;一次性买断；更多看客单价×留存构成的 <strong>LTV</strong> 与买量 <strong>CAC</strong> 的关系。</li>
+</ul>
+<h1 id="指标体系（PM-的“仪表盘”）"><a href="#指标体系（PM-的“仪表盘”）" class="headerlink" title="指标体系（PM 的“仪表盘”）"></a>指标体系（PM 的“仪表盘”）</h1><h2 id="C-端常用"><a href="#C-端常用" class="headerlink" title="C 端常用"></a>C 端常用</h2><ul>
+<li>北极星：DAU&#x2F;WAU、次日&#x2F;7 日&#x2F;30 日留存、转化率（激活→下单）、LTV、ARPU、付费渗透、分享率、投诉率。</li>
+<li>关键实验：首屏转化、付费墙文案&#x2F;位置、价格锚点、冷启动时长。</li>
+</ul>
+<h2 id="B-端常用"><a href="#B-端常用" class="headerlink" title="B 端常用"></a>B 端常用</h2><ul>
+<li>渗透与采用：<strong>活跃租户数、活跃席位数、功能采用率、上线时长（从签约到首单&#x2F;首流程）</strong>。</li>
+<li>业务价值：<strong>人效提升（单笔时长↓）、错误率&#x2F;返工率↓、合规通过率↑、库存&#x2F;应收周转改善</strong>。</li>
+<li>续费健康度：<strong>续费率、NDR（净收入留存）、流失原因闭环、NPS</strong>。</li>
+<li>可靠性：<strong>SLA、变更失败率、平均修复时间（MTTR）</strong>。</li>
+</ul>
+<h1 id="路线图与发布节奏"><a href="#路线图与发布节奏" class="headerlink" title="路线图与发布节奏"></a>路线图与发布节奏</h1><ul>
+<li><strong>C 端</strong>：短周期（1–2 周）灰度 + A&#x2F;B，快速试错；看增量是否带来留存&#x2F;营收提升。</li>
+<li><strong>B 端</strong>：季度&#x2F;双月节奏更稳健；<strong>版本说明、培训素材、回滚预案</strong>必备；变更窗口与影响评估（谁、何时、影响多大）。</li>
+</ul>
+<h1 id="团队协作与角色"><a href="#团队协作与角色" class="headerlink" title="团队协作与角色"></a>团队协作与角色</h1><ul>
+<li><strong>B 端 PM</strong> 同步售前&#x2F;实施&#x2F;交付&#x2F;客户成功&#x2F;法务&#x2F;财务&#x2F;渠道；需求管理像“项目经理+产品经理”的混合体。</li>
+<li><strong>C 端 PM</strong> 紧密配合增长&#x2F;内容&#x2F;运营&#x2F;投放&#x2F;品牌；强数据驱动与内容策略协同。</li>
+</ul>
+<h1 id="常见坑与对策（按端区分）"><a href="#常见坑与对策（按端区分）" class="headerlink" title="常见坑与对策（按端区分）"></a>常见坑与对策（按端区分）</h1><h2 id="B-端"><a href="#B-端" class="headerlink" title="B 端"></a>B 端</h2><ol>
+<li><strong>只听老板不听一线</strong> → 同时访谈决策者与一线操作，绘制“权责-痛点热力图”。</li>
+<li><strong>低估变更成本</strong> → 建“变更影响清单”（流程&#x2F;权限&#x2F;报表&#x2F;培训&#x2F;集成），灰度+并行期。</li>
+<li><strong>可配置泛滥</strong> → 以 80&#x2F;20 选择“强约束默认+少量开关”，给<strong>模板与预置最佳实践</strong>。</li>
+<li><strong>价值难证明</strong> → 设计<strong>前后对比仪表盘</strong>（时长、错单、产能），提供 ROI 计算器和案例库。</li>
+</ol>
+<h2 id="C-端"><a href="#C-端" class="headerlink" title="C 端"></a>C 端</h2><ol>
+<li><strong>沉迷功能堆叠</strong> → 用 JTBD 拆“完成任务的最小闭环”，围绕 aha moment 打磨路径。</li>
+<li><strong>只看下载不看留存</strong> → 把首日&#x2F;7 日留存作为一等公民，首屏聚焦核心价值。</li>
+<li><strong>买量跑不通</strong> → 严控 CAC&#x2F;LTV，做价格测试、权益分层与用户分群精细化运营。</li>
+<li><strong>风控滞后</strong> → 早期引入基本反作弊与内容安全基线，避免增长“虚胖”。</li>
+</ol>
+<h1 id="从-0→1-的落地清单"><a href="#从-0→1-的落地清单" class="headerlink" title="从 0→1 的落地清单"></a>从 0→1 的落地清单</h1><ul>
+<li><strong>B 端 8 步</strong>：<br> ① 锁定“价值流”→② 关键岗位影子研究→③ 痛点×影响矩阵→④ 目标流程与指标→<br> ⑤ PoC 范围（≤8 周）→⑥ 成功标准（量化）→⑦ 实施与培训包→⑧ 复盘→标品化。</li>
+<li><strong>C 端 8 步</strong>：<br> ① 定义北极星→② 场景化故事板→③ 最小可行闭环（MVP）→④ 首屏&#x2F;新手引导→<br> ⑤ A&#x2F;B 指标体系→⑥ 渠道试投与归因→⑦ 留存与价格测试→⑧ 增长飞轮（内容&#x2F;社群&#x2F;口碑）。</li>
+</ul>
+<h1 id="一个对照表（速查）"><a href="#一个对照表（速查）" class="headerlink" title="一个对照表（速查）"></a>一个对照表（速查）</h1><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>B 端</th>
+<th>C 端</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>用户</td>
+<td>组织多角色</td>
+<td>个人&#x2F;小群体</td>
+</tr>
+<tr>
+<td>决策</td>
+<td>招采&#x2F;试点&#x2F;合同，链路长</td>
+<td>即时决策，情绪化</td>
+</tr>
+<tr>
+<td>交付</td>
+<td>实施、培训、集成</td>
+<td>自助上手、线上分发</td>
+</tr>
+<tr>
+<td>关键价值</td>
+<td>ROI、合规、稳定</td>
+<td>体验、情绪、性价比</td>
+</tr>
+<tr>
+<td>设计重点</td>
+<td>权限&#x2F;流程&#x2F;批量&#x2F;审计</td>
+<td>引导&#x2F;可发现&#x2F;动效&#x2F;易上手</td>
+</tr>
+<tr>
+<td>增长</td>
+<td>销售驱动、案例背书</td>
+<td>渠道投放、口碑裂变</td>
+</tr>
+<tr>
+<td>指标</td>
+<td>采纳率、NDR、SLA、人效</td>
+<td>留存、转化、LTV、ARPU</td>
+</tr>
+<tr>
+<td>版本策略</td>
+<td>慎变更、可回滚</td>
+<td>快迭代、强实验</td>
+</tr>
+</tbody></table>
+<h1 id="给-PM-的取舍准则（通用）"><a href="#给-PM-的取舍准则（通用）" class="headerlink" title="给 PM 的取舍准则（通用）"></a>给 PM 的取舍准则（通用）</h1><ul>
+<li><strong>以“达到价值的最短路径”为北极星</strong>：B 端是达到业务结果最短路径，C 端是达到用户 aha moment 最短路径。</li>
+<li><strong>可解释性与可控性优先</strong>：B 端尤其要能解释规则&#x2F;权限&#x2F;报表口径；C 端要解释价格与权益。</li>
+<li><strong>数据闭环</strong>：设计之初就定义“如何被量化验证”。</li>
+</ul>
+<h1 id="常见的-B-端产品和-C-端产品"><a href="#常见的-B-端产品和-C-端产品" class="headerlink" title="常见的 B 端产品和 C 端产品"></a>常见的 B 端产品和 C 端产品</h1><h2 id="一、常见-B-端产品（To-B：面向企业-组织）"><a href="#一、常见-B-端产品（To-B：面向企业-组织）" class="headerlink" title="一、常见 B 端产品（To B：面向企业&#x2F;组织）"></a>一、常见 B 端产品（To B：面向企业&#x2F;组织）</h2><h3 id="1-企业管理类"><a href="#1-企业管理类" class="headerlink" title="1. 企业管理类"></a>1. 企业管理类</h3><ul>
+<li><strong>ERP</strong>（企业资源计划）：SAP、Oracle ERP、金蝶、用友</li>
+<li><strong>CRM</strong>（客户关系管理）：Salesforce、Zoho CRM、纷享销客、销售易</li>
+<li><strong>HRM &#x2F; OA</strong>（人力资源与协同办公）：Workday、北森、钉钉、企业微信</li>
+</ul>
+<h3 id="2-协作与沟通"><a href="#2-协作与沟通" class="headerlink" title="2. 协作与沟通"></a>2. 协作与沟通</h3><ul>
+<li><strong>企业即时通讯 &#x2F; 协同办公</strong>：Slack、Teams、钉钉、飞书</li>
+<li><strong>项目管理</strong>：Jira、Trello（企业版）、Teambition、禅道</li>
+</ul>
+<h3 id="3-行业-垂直解决方案"><a href="#3-行业-垂直解决方案" class="headerlink" title="3. 行业&#x2F;垂直解决方案"></a>3. 行业&#x2F;垂直解决方案</h3><ul>
+<li><strong>电商 SaaS</strong>：Shopify Plus、微盟、有赞（商家端）</li>
+<li><strong>供应链与物流</strong>：Manhattan Associates、顺丰企业物流系统、菜鸟供应链</li>
+<li><strong>金融科技</strong>：企业级支付网关（Stripe for Business）、风控反欺诈系统、核心银行系统</li>
+</ul>
+<h3 id="4-基础设施与开发工具"><a href="#4-基础设施与开发工具" class="headerlink" title="4. 基础设施与开发工具"></a>4. 基础设施与开发工具</h3><ul>
+<li><strong>云服务</strong>：AWS、阿里云、Azure、腾讯云</li>
+<li><strong>DevOps &#x2F; CI&#x2F;CD</strong>：GitLab 企业版、Jenkins、Harness</li>
+<li><strong>数据中台 &#x2F; BI</strong>：Tableau、Power BI、帆软 BI、Looker</li>
+</ul>
+<h2 id="二、常见-C-端产品（To-C：面向个人消费者）"><a href="#二、常见-C-端产品（To-C：面向个人消费者）" class="headerlink" title="二、常见 C 端产品（To C：面向个人消费者）"></a>二、常见 C 端产品（To C：面向个人消费者）</h2><h3 id="1-互联网应用"><a href="#1-互联网应用" class="headerlink" title="1. 互联网应用"></a>1. 互联网应用</h3><ul>
+<li><strong>社交与通讯</strong>：微信、QQ、WhatsApp、Messenger、Telegram</li>
+<li><strong>短视频与内容</strong>：抖音、快手、B站、YouTube、TikTok</li>
+<li><strong>音乐与娱乐</strong>：Spotify、Apple Music、网易云音乐、爱奇艺、Netflix</li>
+</ul>
+<h3 id="2-电商与消费"><a href="#2-电商与消费" class="headerlink" title="2. 电商与消费"></a>2. 电商与消费</h3><ul>
+<li><strong>综合电商</strong>：淘宝、京东、拼多多、亚马逊</li>
+<li><strong>本地生活 &#x2F; 外卖</strong>：美团、饿了么、DoorDash、Uber Eats</li>
+<li><strong>二手交易</strong>：闲鱼、转转、eBay</li>
+</ul>
+<h3 id="3-金融与支付"><a href="#3-金融与支付" class="headerlink" title="3. 金融与支付"></a>3. 金融与支付</h3><ul>
+<li><strong>移动支付</strong>：支付宝、微信支付、PayPal、Venmo</li>
+<li><strong>理财投资</strong>：蚂蚁财富、雪球、Robinhood</li>
+</ul>
+<h3 id="4-工具与生活服务"><a href="#4-工具与生活服务" class="headerlink" title="4. 工具与生活服务"></a>4. 工具与生活服务</h3><ul>
+<li><strong>出行</strong>：滴滴出行、Uber、Lyft</li>
+<li><strong>地图导航</strong>：高德地图、百度地图、Google Maps</li>
+<li><strong>效率工具</strong>：印象笔记、石墨文档、Notion、Todoist</li>
+<li><strong>健康运动</strong>：Keep、Fitbit App、Nike Run Club</li>
+</ul>
+<h2 id="三、对照举例（同一公司-ToB-与-ToC-产品）"><a href="#三、对照举例（同一公司-ToB-与-ToC-产品）" class="headerlink" title="三、对照举例（同一公司 ToB 与 ToC 产品）"></a>三、对照举例（同一公司 ToB 与 ToC 产品）</h2><ul>
+<li><strong>阿里巴巴</strong><ul>
+<li>B 端：钉钉、阿里云、零售通</li>
+<li>C 端：淘宝、天猫、支付宝</li>
+</ul>
+</li>
+<li><strong>腾讯</strong><ul>
+<li>B 端：企业微信、腾讯云</li>
+<li>C 端：微信、QQ、王者荣耀</li>
+</ul>
+</li>
+<li><strong>字节跳动</strong><ul>
+<li>B 端：飞书、巨量引擎（广告投放平台）</li>
+<li>C 端：抖音、今日头条、TikTok</li>
+</ul>
+</li>
+</ul>
+</div>
+				<link rel="stylesheet" type="text/css" href="https://qiniu.techgrow.cn/readmore/dist/hexo.css">
+				<script src="https://qiniu.techgrow.cn/readmore/dist/readmore.js" type="text/javascript"></script>
+				<script>
+				var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+				var isEncrypt = document.getElementById('hexo-blog-encrypt');
+				var allowMobile = false;
+				if (!isEncrypt && (!isMobile || (isMobile && allowMobile))) {
+					try {
+						var plugin = new ReadmorePlugin();
+						plugin.init({
+							"type": "hexo",
+							"id": "readmore-container",
+							"name": "爱编程的阿彬",
+							"blogId": "90404-1002832395481-212",
+							"qrcode": "https://raw.githubusercontent.com/liuyuhe666/images/main/PicGo/202412061425785.jpg",
+							"keyword": "验证码",
+							"random": "1",
+							"height": "auto",
+							"expires": "365",
+							"lockToc": "yes",
+							"interval": "60",
+							"baseUrl": "",
+							"tocSelector": "#toc-body"
+						});
+					} catch(e) {
+						console.warn("readmore plugin occurred error: " + e.name + " | " + e.message);
+					}
+				}
+				</script>
+			
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E4%BA%A7%E5%93%81%E7%BB%8F%E7%90%86/" class="print-no-link">#产品经理</a>
+      
+        <a href="/tags/B-%E7%AB%AF/" class="print-no-link">#B 端</a>
+      
+        <a href="/tags/C-%E7%AB%AF/" class="print-no-link">#C 端</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>【产品经理】详细分析 B 端与 C 端的区别</div>
+      <div>https://liuyuhe666.github.io/2025/08/22/【产品经理】详细分析-B-端与-C-端的区别/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Liu Yuhe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年8月22日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-cc-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/08/24/%E3%80%90%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F%E3%80%91%E5%B8%B8%E7%94%A8%E7%9A%84%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/" title="【推荐系统】常用的推荐算法">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">【推荐系统】常用的推荐算法</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/08/07/Java-%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E4%B8%8B%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" title="Java 应用程序生产环境下问题排查">
+                        <span class="hidden-mobile">Java 应用程序生产环境下问题排查</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+    <div id="giscus" class="giscus"></div>
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#giscus', function() {
+        var options = {"repo":"liuyuhe666/comments","repo-id":"R_kgDONaLKFg","category":"Announcements","category-id":"DIC_kwDONaLKFs4CldnC","theme-light":"light","theme-dark":"dark","mapping":"pathname","reactions-enabled":1,"emit-metadata":0,"input-position":"top","lang":"zh-CN"};
+        var attributes = {};
+        for (let option in options) {
+          if (!option.startsWith('theme-')) {
+            var key = option.startsWith('data-') ? option : 'data-' + option;
+            attributes[key] = options[option];
+          }
+        }
+        var light = 'light';
+        var dark = 'dark';
+        window.GiscusThemeLight = light;
+        window.GiscusThemeDark = dark;
+        attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
+        for (let attribute in attributes) {
+          var value = attributes[attribute];
+          if (value === undefined || value === null || value === '') {
+            delete attributes[attribute];
+          }
+        }
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('crossorigin', 'anonymous');
+        for (let attribute in attributes) {
+          s.setAttribute(attribute, attributes[attribute]);
+        }
+        var ss = document.getElementsByTagName('script');
+        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+        e.parentNode.insertBefore(s, e.nextSibling);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

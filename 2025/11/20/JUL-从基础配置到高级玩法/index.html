@@ -1,0 +1,1019 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-72x72.png">
+  <link rel="icon" href="/img/favicon-32x32.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Liu Yuhe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="🎯  JUL 的总体架构JUL 的核心组件：  Logger：记录日志的入口 Handler：日志输出目标（控制台、文件等） Formatter：日志格式 Level：日志级别 Filter：过滤日志记录 LogManager：管理全局配置（读取 logging.properties）  整体日志流： Logger → Filter → Handler → Filter → Formatter">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JUL 从基础配置到高级玩法">
+<meta property="og:url" content="https://liuyuhe666.github.io/2025/11/20/JUL-%E4%BB%8E%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE%E5%88%B0%E9%AB%98%E7%BA%A7%E7%8E%A9%E6%B3%95/index.html">
+<meta property="og:site_name" content="LiuYuhe&#39;s Blog">
+<meta property="og:description" content="🎯  JUL 的总体架构JUL 的核心组件：  Logger：记录日志的入口 Handler：日志输出目标（控制台、文件等） Formatter：日志格式 Level：日志级别 Filter：过滤日志记录 LogManager：管理全局配置（读取 logging.properties）  整体日志流： Logger → Filter → Handler → Filter → Formatter">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-11-20T21:09:35.000Z">
+<meta property="article:modified_time" content="2025-12-17T06:30:30.700Z">
+<meta property="article:author" content="Liu Yuhe">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="日志">
+<meta property="article:tag" content="JUL">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>JUL 从基础配置到高级玩法 - LiuYuhe&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"liuyuhe666.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":"G-BLSKN6P29D"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-BLSKN6P29D", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-BLSKN6P29D');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="LiuYuhe's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>LiuYuhe の Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://www.travellings.cn/go.html" target="_self">
+                
+                <span>🚇开往</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="JUL 从基础配置到高级玩法"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-11-20 21:09" pubdate>
+          2025年11月20日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          945 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          8 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">JUL 从基础配置到高级玩法</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <div id="readmore-container"><h2 id="🎯-JUL-的总体架构"><a href="#🎯-JUL-的总体架构" class="headerlink" title="🎯  JUL 的总体架构"></a>🎯  JUL 的总体架构</h2><p>JUL 的核心组件：</p>
+<ul>
+<li><strong>Logger</strong>：记录日志的入口</li>
+<li><strong>Handler</strong>：日志输出目标（控制台、文件等）</li>
+<li><strong>Formatter</strong>：日志格式</li>
+<li><strong>Level</strong>：日志级别</li>
+<li><strong>Filter</strong>：过滤日志记录</li>
+<li><strong>LogManager</strong>：管理全局配置（读取 logging.properties）</li>
+</ul>
+<p>整体日志流：</p>
+<div class="code-wrapper"><pre><code class="hljs pgsql">Logger → <span class="hljs-keyword">Filter</span> → <span class="hljs-keyword">Handler</span> → <span class="hljs-keyword">Filter</span> → Formatter → 输出</code></pre></div>
+
+
+<h2 id="🚀-最基础的用法"><a href="#🚀-最基础的用法" class="headerlink" title="🚀 最基础的用法"></a>🚀 最基础的用法</h2><div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.logging.*;
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Demo</span> &#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Logger</span> <span class="hljs-variable">logger</span> <span class="hljs-operator">=</span> Logger.getLogger(Demo.class.getName());
+
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;
+        logger.info(<span class="hljs-string">&quot;Hello logging&quot;</span>);
+        logger.warning(<span class="hljs-string">&quot;Something wrong!&quot;</span>);
+    &#125;
+&#125;</code></pre></div>
+
+<p>默认输出到控制台，格式是 JUL 默认格式。</p>
+<h2 id="⚙️-通过-logging-properties-进行全局配置（常用）"><a href="#⚙️-通过-logging-properties-进行全局配置（常用）" class="headerlink" title="⚙️ 通过 logging.properties 进行全局配置（常用）"></a>⚙️ 通过 logging.properties 进行全局配置（常用）</h2><p>JUL 的默认全局配置文件：</p>
+<div class="code-wrapper"><pre><code class="hljs awk"><span class="hljs-variable">$JAVA_HOME</span><span class="hljs-regexp">/jre/</span>lib/logging.properties</code></pre></div>
+
+<p>你也可以指定自己的配置：</p>
+<div class="code-wrapper"><pre><code class="hljs bash">java -Djava.util.logging.config.file=./logging.properties Demo</code></pre></div>
+
+<p>示例 properties：</p>
+<div class="code-wrapper"><pre><code class="hljs properties"><span class="hljs-comment"># 全局日志级别</span>
+<span class="hljs-attr">.level</span> = <span class="hljs-string">INFO</span>
+<span class="hljs-comment"></span>
+<span class="hljs-comment"># 配置控制台输出处理器</span>
+<span class="hljs-attr">handlers</span> = <span class="hljs-string">java.util.logging.ConsoleHandler</span>
+<span class="hljs-comment"></span>
+<span class="hljs-comment"># ConsoleHandler 级别</span>
+<span class="hljs-attr">java.util.logging.ConsoleHandler.level</span> = <span class="hljs-string">FINE</span>
+<span class="hljs-attr">java.util.logging.ConsoleHandler.formatter</span> = <span class="hljs-string">java.util.logging.SimpleFormatter</span></code></pre></div>
+
+<p>如需输出到文件：</p>
+<div class="code-wrapper"><pre><code class="hljs properties"><span class="hljs-attr">handlers</span> = <span class="hljs-string">java.util.logging.FileHandler, java.util.logging.ConsoleHandler</span>
+
+<span class="hljs-attr">java.util.logging.FileHandler.pattern</span> = <span class="hljs-string">logs/app.%u.%g.log</span>
+<span class="hljs-attr">java.util.logging.FileHandler.limit</span> = <span class="hljs-string">5000000</span>
+<span class="hljs-attr">java.util.logging.FileHandler.count</span> = <span class="hljs-string">3</span>
+<span class="hljs-attr">java.util.logging.FileHandler.append</span> = <span class="hljs-string">true</span>
+<span class="hljs-attr">java.util.logging.FileHandler.formatter</span> = <span class="hljs-string">java.util.logging.SimpleFormatter</span></code></pre></div>
+
+<h2 id="📌-代码动态配置（无需-logging-properties）"><a href="#📌-代码动态配置（无需-logging-properties）" class="headerlink" title="📌 代码动态配置（无需 logging.properties）"></a>📌 代码动态配置（无需 logging.properties）</h2><p>（1）关闭父 Logger 的默认 Handler</p>
+<div class="code-wrapper"><pre><code class="hljs java">logger.setUseParentHandlers(<span class="hljs-literal">false</span>);</code></pre></div>
+
+<p>（2）添加控制台 Handler</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-type">ConsoleHandler</span> <span class="hljs-variable">consoleHandler</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConsoleHandler</span>();
+consoleHandler.setLevel(Level.ALL);
+
+logger.addHandler(consoleHandler);
+logger.setLevel(Level.ALL);</code></pre></div>
+
+<p>（3）添加文件输出</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-type">FileHandler</span> <span class="hljs-variable">fileHandler</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FileHandler</span>(<span class="hljs-string">&quot;app.log&quot;</span>, <span class="hljs-literal">true</span>);
+fileHandler.setFormatter(<span class="hljs-keyword">new</span> <span class="hljs-title class_">SimpleFormatter</span>());
+
+logger.addHandler(fileHandler);</code></pre></div>
+
+<h2 id="🎨-自定义-Formatter（美化日志）"><a href="#🎨-自定义-Formatter（美化日志）" class="headerlink" title="🎨 自定义 Formatter（美化日志）"></a>🎨 自定义 Formatter（美化日志）</h2><p>默认格式不太好看，可以自定义：</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyFormatter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Formatter</span> &#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">format</span><span class="hljs-params">(LogRecord record)</span> &#123;
+        <span class="hljs-keyword">return</span> String.format(
+            <span class="hljs-string">&quot;[%1$tF %1$tT] [%2$-7s] %3$s - %4$s%n&quot;</span>,
+            record.getMillis(),
+            record.getLevel().getName(),
+            record.getLoggerName(),
+            record.getMessage()
+        );
+    &#125;
+&#125;</code></pre></div>
+
+<p>使用它：</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-type">ConsoleHandler</span> <span class="hljs-variable">handler</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConsoleHandler</span>();
+handler.setFormatter(<span class="hljs-keyword">new</span> <span class="hljs-title class_">MyFormatter</span>());
+logger.addHandler(handler);</code></pre></div>
+
+<p>输出示例：</p>
+<div class="code-wrapper"><pre><code class="hljs stylus"><span class="hljs-selector-attr">[2025-11-16 10:15:33]</span> <span class="hljs-selector-attr">[INFO   ]</span> com<span class="hljs-selector-class">.example</span><span class="hljs-selector-class">.Main</span> - Started</code></pre></div>
+
+<p>这已经很接近 Log4j &#x2F; SLF4J 的格式。</p>
+<h2 id="🚧-自定义-Handler（进阶玩法）"><a href="#🚧-自定义-Handler（进阶玩法）" class="headerlink" title="🚧  自定义 Handler（进阶玩法）"></a>🚧  自定义 Handler（进阶玩法）</h2><p>例如把日志写到数据库、MQ、ElasticSearch。</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyDbHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Handler</span> &#123;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">publish</span><span class="hljs-params">(LogRecord record)</span> &#123;
+        <span class="hljs-type">String</span> <span class="hljs-variable">msg</span> <span class="hljs-operator">=</span> getFormatter().format(record);
+        <span class="hljs-comment">// 写入数据库</span>
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">flush</span><span class="hljs-params">()</span> &#123;&#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">close</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> SecurityException &#123;&#125;
+&#125;</code></pre></div>
+
+<p>使用：</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-type">MyDbHandler</span> <span class="hljs-variable">handler</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">MyDbHandler</span>();
+handler.setFormatter(<span class="hljs-keyword">new</span> <span class="hljs-title class_">MyFormatter</span>());
+logger.addHandler(handler);</code></pre></div>
+
+<h2 id="🔍-使用-Filter（按条件过滤日志）"><a href="#🔍-使用-Filter（按条件过滤日志）" class="headerlink" title="🔍 使用 Filter（按条件过滤日志）"></a>🔍 使用 Filter（按条件过滤日志）</h2><p>例如只输出包含 “ORDER” 的日志：</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OrderFilter</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Filter</span> &#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isLoggable</span><span class="hljs-params">(LogRecord record)</span> &#123;
+        <span class="hljs-keyword">return</span> record.getMessage().contains(<span class="hljs-string">&quot;ORDER&quot;</span>);
+    &#125;
+&#125;</code></pre></div>
+
+<p>挂载过滤器：</p>
+<div class="code-wrapper"><pre><code class="hljs java">handler.setFilter(<span class="hljs-keyword">new</span> <span class="hljs-title class_">OrderFilter</span>());</code></pre></div>
+
+<h2 id="🧬-使用-LogManager-手动加载配置"><a href="#🧬-使用-LogManager-手动加载配置" class="headerlink" title="🧬 使用 LogManager 手动加载配置"></a>🧬 使用 LogManager 手动加载配置</h2><p>如果你想运行时动态加载 logging.properties：</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">try</span> (<span class="hljs-type">InputStream</span> <span class="hljs-variable">is</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FileInputStream</span>(<span class="hljs-string">&quot;logging.properties&quot;</span>)) &#123;
+    LogManager.getLogManager().readConfiguration(is);
+&#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;
+    e.printStackTrace();
+&#125;</code></pre></div>
+
+<p>应用场景：</p>
+<ul>
+<li>Web 容器</li>
+<li>自写框架</li>
+<li>动态切换日志级别</li>
+<li>集中式日志管理</li>
+</ul>
+<h2 id="🪝-Logger-继承体系"><a href="#🪝-Logger-继承体系" class="headerlink" title="🪝  Logger 继承体系"></a>🪝  Logger 继承体系</h2><p>JUL 的 Logger 是分层级的（基于命名空间）。</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-type">Logger</span> <span class="hljs-variable">parent</span> <span class="hljs-operator">=</span> Logger.getLogger(<span class="hljs-string">&quot;com&quot;</span>);
+<span class="hljs-type">Logger</span> <span class="hljs-variable">child</span> <span class="hljs-operator">=</span> Logger.getLogger(<span class="hljs-string">&quot;com.example&quot;</span>);</code></pre></div>
+
+<p>子 logger 默认继承父的：</p>
+<ul>
+<li>handler</li>
+<li>level（如果未显式设置）</li>
+</ul>
+<p>如果你想让 child 独立：</p>
+<div class="code-wrapper"><pre><code class="hljs java">child.setUseParentHandlers(<span class="hljs-literal">false</span>);</code></pre></div>
+
+<h2 id="⚡-JUL-vs-Log4j-vs-SLF4J（补充）"><a href="#⚡-JUL-vs-Log4j-vs-SLF4J（补充）" class="headerlink" title="⚡ JUL vs Log4j vs SLF4J（补充）"></a>⚡ JUL vs Log4j vs SLF4J（补充）</h2><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>JUL</th>
+<th>Log4j</th>
+<th>SLF4J</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>标准库</td>
+<td>✔</td>
+<td>✘</td>
+<td>✘</td>
+</tr>
+<tr>
+<td>配置灵活度</td>
+<td>一般</td>
+<td>高</td>
+<td>取决于 Logging 桥</td>
+</tr>
+<tr>
+<td>功能丰富度</td>
+<td>一般</td>
+<td>高</td>
+<td>取决于实现</td>
+</tr>
+<tr>
+<td>Formatter</td>
+<td>简单</td>
+<td>丰富</td>
+<td>取决于实现</td>
+</tr>
+<tr>
+<td>性能</td>
+<td>中等</td>
+<td>高</td>
+<td>高</td>
+</tr>
+</tbody></table>
+<p>现代 Java 项目常用：</p>
+<p><strong>SLF4J + Logback</strong><br> 或<br> <strong>Jakarta Logging + Log4j2</strong></p>
+<p>但 JUL 内置、无需依赖，仍适合：</p>
+<ul>
+<li>小工具程序</li>
+<li>Java Agent</li>
+<li>嵌入式场景</li>
+<li>JDK 自带库</li>
+</ul>
+<h2 id="🧪-高级玩法示例：只输出某个包的-DEBUG"><a href="#🧪-高级玩法示例：只输出某个包的-DEBUG" class="headerlink" title="🧪  高级玩法示例：只输出某个包的 DEBUG"></a>🧪  高级玩法示例：只输出某个包的 DEBUG</h2><div class="code-wrapper"><pre><code class="hljs properties"><span class="hljs-comment"># 全局 INFO</span>
+<span class="hljs-attr">.level</span> = <span class="hljs-string">INFO</span>
+<span class="hljs-comment"></span>
+<span class="hljs-comment"># 单独调低某个包的日志级别</span>
+<span class="hljs-attr">com.example.payment.level</span> = <span class="hljs-string">FINE</span></code></pre></div>
+
+<p>然后代码里：</p>
+<div class="code-wrapper"><pre><code class="hljs java">logger.fine(<span class="hljs-string">&quot;debug data&quot;</span>);</code></pre></div>
+
+<p>全局不会显示，但 payment 包会显示，非常适合定位问题。</p>
+<h2 id="🏆-最佳实践总结"><a href="#🏆-最佳实践总结" class="headerlink" title="🏆 最佳实践总结"></a>🏆 最佳实践总结</h2><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>方案</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>程序小、无外部依赖</td>
+<td><strong>直接用 JUL</strong></td>
+</tr>
+<tr>
+<td>自定义格式</td>
+<td><strong>自定义 Formatter</strong></td>
+</tr>
+<tr>
+<td>程序必须运行中调整日志级别</td>
+<td>使用 <strong>LogManager 动态加载</strong></td>
+</tr>
+<tr>
+<td>输出到数据库&#x2F;ES&#x2F;MQ</td>
+<td><strong>自定义 Handler</strong></td>
+</tr>
+<tr>
+<td>分模块调试</td>
+<td>使用 <strong>Logger 层级</strong></td>
+</tr>
+<tr>
+<td>替换默认输出</td>
+<td><code>setUseParentHandlers(false)</code></td>
+</tr>
+</tbody></table>
+</div>
+				<link rel="stylesheet" type="text/css" href="https://qiniu.techgrow.cn/readmore/dist/hexo.css">
+				<script src="https://qiniu.techgrow.cn/readmore/dist/readmore.js" type="text/javascript"></script>
+				<script>
+				var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+				var isEncrypt = document.getElementById('hexo-blog-encrypt');
+				var allowMobile = false;
+				if (!isEncrypt && (!isMobile || (isMobile && allowMobile))) {
+					try {
+						var plugin = new ReadmorePlugin();
+						plugin.init({
+							"type": "hexo",
+							"id": "readmore-container",
+							"name": "爱编程的阿彬",
+							"blogId": "90404-1002832395481-212",
+							"qrcode": "https://raw.githubusercontent.com/liuyuhe666/images/main/PicGo/202412061425785.jpg",
+							"keyword": "验证码",
+							"random": "1",
+							"height": "auto",
+							"expires": "365",
+							"lockToc": "yes",
+							"interval": "60",
+							"baseUrl": "",
+							"tocSelector": "#toc-body"
+						});
+					} catch(e) {
+						console.warn("readmore plugin occurred error: " + e.name + " | " + e.message);
+					}
+				}
+				</script>
+			
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
+      
+        <a href="/tags/%E6%97%A5%E5%BF%97/" class="print-no-link">#日志</a>
+      
+        <a href="/tags/JUL/" class="print-no-link">#JUL</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>JUL 从基础配置到高级玩法</div>
+      <div>https://liuyuhe666.github.io/2025/11/20/JUL-从基础配置到高级玩法/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Liu Yuhe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年11月20日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-cc-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/12/06/%E5%BE%B7%E9%9B%B7%E7%A6%8F%E6%96%AF%E6%A8%A1%E5%9E%8B/" title="德雷福斯模型">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">德雷福斯模型</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/11/06/Java-%E9%9B%86%E5%90%88-Stream-%E6%93%8D%E4%BD%9C/" title="Java 集合 Stream 操作">
+                        <span class="hidden-mobile">Java 集合 Stream 操作</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+    <div id="giscus" class="giscus"></div>
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#giscus', function() {
+        var options = {"repo":"liuyuhe666/comments","repo-id":"R_kgDONaLKFg","category":"Announcements","category-id":"DIC_kwDONaLKFs4CldnC","theme-light":"light","theme-dark":"dark","mapping":"pathname","reactions-enabled":1,"emit-metadata":0,"input-position":"top","lang":"zh-CN"};
+        var attributes = {};
+        for (let option in options) {
+          if (!option.startsWith('theme-')) {
+            var key = option.startsWith('data-') ? option : 'data-' + option;
+            attributes[key] = options[option];
+          }
+        }
+        var light = 'light';
+        var dark = 'dark';
+        window.GiscusThemeLight = light;
+        window.GiscusThemeDark = dark;
+        attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
+        for (let attribute in attributes) {
+          var value = attributes[attribute];
+          if (value === undefined || value === null || value === '') {
+            delete attributes[attribute];
+          }
+        }
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('crossorigin', 'anonymous');
+        for (let attribute in attributes) {
+          s.setAttribute(attribute, attributes[attribute]);
+        }
+        var ss = document.getElementsByTagName('script');
+        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+        e.parentNode.insertBefore(s, e.nextSibling);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
